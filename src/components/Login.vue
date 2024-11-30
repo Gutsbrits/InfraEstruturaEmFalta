@@ -1,5 +1,6 @@
 <template>
   <div class="login">
+    <!-- Famoso titulo -->
     <h2>Login</h2>
     <form @submit.prevent="login">
       <div class="form-group">

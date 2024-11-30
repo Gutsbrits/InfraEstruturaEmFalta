@@ -1,27 +1,36 @@
 <template>
   <div id="app">
-    <nav class="navbar">
+    <!-- Barra de navegção -->
+    <nav class="navbar"> 
       <div class="navbar-logo">
         <a href="#">InfraEstrutura em Falta</a>
       </div>
       <ul class="navbar-links">
         <li v-if="isLoggedIn">
+          <!-- Botão para visualizar a página de reclamações -->
           <a href="#" @click.prevent="currentPage = 'Visualizar'">Visualizar Reclamações</a>
         </li>
         <li v-if="isLoggedIn">
+          <!-- Botão para voltar para a página de regitro de reclamações  -->
           <a href="#" @click.prevent="currentPage = 'Reclamacoes'">Registrar Reclamação</a>
         </li>
         <li v-if="isLoggedIn">
+          <!-- Botão de sair -->
           <a href="#" @click.prevent="logout">Sair</a>
+
+          <!-- @click.prevent executa uma ação e evita o comportamento padrão de recarregar a página -->
         </li>
+
       </ul>
     </nav>
+    <!-- Fim da barra de navegação -->
     <component
       :is="currentPage"
       @login-success="handleLoginSuccess"
       @go-to-cadastro="currentPage = 'Cadastro'"
       @go-to-login="currentPage = 'Login'"
     />
+    <!-- Um componente dinâmico que renderiza o componente baseado no valor de currentPage. -->
   </div>
 </template>
 
@@ -34,24 +43,25 @@ import Visualizar from "./components/VisualizarReclamacoes.vue";
 export default {
   data() {
     return {
-      currentPage: "Login", // Página inicial
-      isLoggedIn: false, // Controle de login
+      currentPage: "Login", // Controla qual página está ativa
+      isLoggedIn: false, // Indica se o usúraio está logado
     };
   },
   components: {
+    // Vai importar os componentes que serão usados no componente dinâmico.
     Login,
     Cadastro,
     Reclamacoes,
     Visualizar,
   },
   methods: {
-    handleLoginSuccess() {
+    handleLoginSuccess() { // Método chamado quando usúario faz login.
       this.currentPage = "Reclamacoes";
-      this.isLoggedIn = true; // Define como logado
+      this.isLoggedIn = true; // Atualiza o isLoggedIn e muda para a página de registro de reclamações.
     },
-    logout() {
-      localStorage.removeItem("loggedUser"); // Remove usuário logado
-      this.isLoggedIn = false;
+    logout() { // Método para deslogar o usúario.
+      localStorage.removeItem("loggedUser"); // Remove informações do LcalStorage
+      this.isLoggedIn = false; 
       this.currentPage = "Login";
     },
   },
