@@ -26,6 +26,8 @@
 </template>
 
 <script>
+import Localbase from 'localbase'
+
 export default {
   data() {
     return {
@@ -40,7 +42,12 @@ export default {
       ],
       problemasSelecionados: [],
       sucesso: false,
+      db: null
     };
+  },
+  mounted(){
+   this.db =  new Localbase('ief')
+
   },
   methods: {
     enviarReclamacao() {
@@ -51,12 +58,18 @@ export default {
 
       const novaReclamacao = {
         descricao: this.descricao,
-        problemas: this.problemasSelecionados,
+        problemas: this.problemasSelecionados[0],
         data: new Date().toLocaleString(),
       };
 
+
+      this.db.collection('reclamacoes').add(
+        novaReclamacao
+      )
       const reclamacoes = JSON.parse(localStorage.getItem("reclamacoes")) || [];
+      
       reclamacoes.push(novaReclamacao);
+      
       localStorage.setItem("reclamacoes", JSON.stringify(reclamacoes));
 
       this.descricao = "";

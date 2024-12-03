@@ -21,20 +21,35 @@
 </template>
 
 <script>
+
+import Localbase from 'localbase'
+
+// let db = new Localbase('ief')
+
 export default {
   data() {
     return {
       nome: '',
       email: '',
       senha: '',
+      db: null
     };
+  },
+  mounted(){
+   this.db =  new Localbase('ief')
   },
   methods: {
     registrar() {
       if (this.nome && this.email && this.senha) {
         const usuario = { nome: this.nome, email: this.email, senha: this.senha };
         // Salvar usuário no localStorage ou em uma base de dados
+        this.db.collection('usuarios').add(
+          usuario
+        )
         localStorage.setItem("usuario", JSON.stringify(usuario));
+        db.collection('users').get().then(users => {
+  console.log(users)
+})
         alert("Cadastro realizado com sucesso!");
         this.$emit("go-to-login"); // Navega para a tela de login após o cadastro
       } else {

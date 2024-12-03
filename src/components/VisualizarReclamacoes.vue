@@ -4,11 +4,11 @@
     <ul v-if="reclamacoes.length">
       <li v-for="(reclamacao, index) in reclamacoes" :key="index" class="reclamacao-item">
         <div class="reclamacao-header">
-          <strong>{{ reclamacao.descricao }}</strong>
-          <span class="reclamacao-data">{{ reclamacao.data }}</span>
+          <strong>{{ reclamacao.data.descricao }}</strong>
+          <span class="reclamacao-data">{{ reclamacao.data.data }}</span>
         </div>
-        <p class="descricao">{{ reclamacao.problemas.join(', ') }}</p>
-        <button @click="excluirReclamacao(index)" class="delete-btn">Excluir</button>
+        <p class="descricao">{{ reclamacao.data.problemas }}</p>
+        <button @click="excluirReclamacao(reclamacao.key)" class="delete-btn">Excluir</button>
       </li>
     </ul>
     <p v-else class="no-reclame">Você ainda não registrou reclamações.</p>
@@ -16,22 +16,32 @@
 </template>
 
 <script>
+
+import Localbase from 'localbase'
+
+
 export default {
   data() {
     return {
       reclamacoes: [],
+      db:new Localbase('ief')
     };
   },
-  mounted() {
-    this.reclamacoes = JSON.parse(localStorage.getItem("reclamacoes")) || [];
+  async mounted() {
+    await this.inicio()
   },
   methods: {
-    excluirReclamacao(index) {
+    async excluirReclamacao(index) {
       if (confirm("Tem certeza que deseja excluir esta reclamação?")) {
-        this.reclamacoes.splice(index, 1);
-        localStorage.setItem("reclamacoes", JSON.stringify(this.reclamacoes));
+        await this.db.collection('reclamacoes').doc(index).delete()
+        await this.inicio()
       }
     },
+      async inicio(){
+       this.reclamacoes= await this.db.collection('reclamacoes').get({keys: true})
+
+      }
+      
   },
 };
 </script>
