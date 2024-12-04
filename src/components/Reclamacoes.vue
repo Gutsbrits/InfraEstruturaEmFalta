@@ -104,6 +104,7 @@ h2 {
 }
 
 textarea {
+  resize: none;
   width: 580px;
   padding: 10px;
   font-size: 14px;
